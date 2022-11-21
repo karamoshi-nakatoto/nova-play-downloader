@@ -8,10 +8,10 @@ The required dependencies are curl, jq and ffmpeg.
 $ sudo apt install curl jq ffmpeg
 ```
 
-The script takes two positional arguments - the first is the Nova Play API_ID, and the second is the episode number.
+The script takes two positional arguments - the first is the Nova Play URL, and the second is the episode number.
 
 In order to use, run it like this:
 
 ```shell
-$ ./download.sh 607998 1
+$ ./download.sh https://play.nova.bg/video/s-reka-na-surceto/season-1/s-reka-na-surceto-2022-09-13/607998 1
 ```

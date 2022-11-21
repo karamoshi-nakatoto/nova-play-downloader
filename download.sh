@@ -5,10 +5,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-# You can find the API_ID when you visit the episode url. For example:
-# https://play.nova.bg/video/s-reka-na-surceto/season-1/s-reka-na-surceto-2022-09-13/607998
-# ......................................................................this is the ID ↑
-API_ID=$1
+API_ID=$(basename "$1")
 # Format the episode number with a leading zero (01, 02, 03 etc.)
 EP=$(printf %02d $2)
 

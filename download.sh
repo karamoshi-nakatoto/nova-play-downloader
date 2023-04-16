@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck shell=bash
 # This script depends on curl, jq and ffmpeg.
 
 # Strict mode
@@ -6,7 +7,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 # Format the episode number with a leading zero (01, 02, 03 etc.)
-EP=$(printf %02d $1)
+EP=$(printf %02d "$1")
 API_ID=$(basename "$2")
 
 # You may need to refresh this cookie by inspecting the headers of the first

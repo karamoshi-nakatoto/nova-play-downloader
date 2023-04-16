@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# This script depends on jq and ffmpeg.
+# This script depends on curl, jq and ffmpeg.
 
 # Strict mode
 set -euo pipefail

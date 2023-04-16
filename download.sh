@@ -5,9 +5,9 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-API_ID=$(basename "$1")
 # Format the episode number with a leading zero (01, 02, 03 etc.)
-EP=$(printf %02d $2)
+EP=$(printf %02d $1)
+API_ID=$(basename "$2")
 
 # You may need to refresh this cookie by inspecting the headers of the first
 # request to https://play.nova.bg/api/client. Copy the cookie header and put it here

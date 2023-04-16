@@ -1,6 +1,6 @@
 # Nova Play Downloader
 
-This is an automated bash script which can save series episodes from https://play.nova.bg/ to your local disk.
+This is an automated bash script which can save series episodes from https://play.nova.bg/ to your local disk. The episode files are saved in the highest available quality (usually 720p or 1080p).
 
 The required dependencies are curl, jq and ffmpeg.
 

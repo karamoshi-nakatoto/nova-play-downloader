@@ -32,6 +32,21 @@ URL="$(curl -sS --location --request GET "https://nbg-api.fite.tv/api/v2/videos/
 
 NEW_URL="$(curl -sSL -o /dev/null "$URL" -w "%{url_effective}")"
 
-FINAL_URL="$(dirname "$NEW_URL")/$(curl -sSL "$URL" | grep -v '#' | grep 1080)"
+PLAYLIST="$(curl -sSL "$URL" | grep -v '#')"
+
+# Try to download highest available quality
+if echo "$PLAYLIST" | grep -q 1080; then
+  DOWNLOAD_URL="$(echo "$PLAYLIST" | grep 1080)"
+elif echo "$PLAYLIST" | grep -q 720; then
+  DOWNLOAD_URL="$(echo "$PLAYLIST" | grep 720)"
+elif echo "$PLAYLIST" | grep -q 480; then
+  DOWNLOAD_URL="$(echo "$PLAYLIST" | grep 480)"
+elif echo "$PLAYLIST" | grep -q 360; then
+  DOWNLOAD_URL="$(echo "$PLAYLIST" | grep 360)"
+elif echo "$PLAYLIST" | grep -q 240; then
+  DOWNLOAD_URL="$(echo "$PLAYLIST" | grep 240)"
+fi
+
+FINAL_URL="$(dirname "$NEW_URL")/$DOWNLOAD_URL"
 
 ffmpeg -i "$FINAL_URL" -c copy "$FILENAME"

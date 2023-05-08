@@ -20,15 +20,15 @@ if [ -f "$FILENAME" ]; then
   exit 1
 fi
 
-ACCESS_TOKEN="$(curl -sS --location --request GET 'https://play.nova.bg/api/client' \
+ACCESS_TOKEN="$(curl -sSL 'https://play.nova.bg/api/client' \
   -b "$COOKIE_JAR" \
-| jq -r ".accessToken")"
+  | jq -r ".accessToken")"
 
-URL="$(curl -sS --location --request GET "https://nbg-api.fite.tv/api/v2/videos/$API_ID/streams" \
---header 'X-Flipps-User-Agent: Flipps/75/10.7' \
---header 'X-Flipps-Version: 2022-05-17' \
---header "Authorization: Bearer $ACCESS_TOKEN" \
-| jq -r '.[0].links.play.href')"
+URL="$(curl -sSL "https://nbg-api.fite.tv/api/v2/videos/$API_ID/streams" \
+  --header 'X-Flipps-User-Agent: Flipps/75/10.7' \
+  --header 'X-Flipps-Version: 2022-05-17' \
+  --header "Authorization: Bearer $ACCESS_TOKEN" \
+  | jq -r '.[0].links.play.href')"
 
 
 NEW_URL="$(curl -sSL -o /dev/null "$URL" -w "%{url_effective}")"

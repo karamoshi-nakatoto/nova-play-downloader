@@ -30,24 +30,33 @@ URL="$(curl -sSL "https://nbg-api.fite.tv/api/v2/videos/$API_ID/streams" \
   --header "Authorization: Bearer $ACCESS_TOKEN" \
   | jq -r '.[0].links.play.href')"
 
+UPSTREAM_FILENAME="$(basename "$URL")"
+# https://stackoverflow.com/questions/965053/extract-filename-and-extension-in-bash
+EXTENSION="${UPSTREAM_FILENAME##*.}"
 
-NEW_URL="$(curl -sSL -o /dev/null "$URL" -w "%{url_effective}")"
+if [ "$EXTENSION" = "mp4" ];
+then
+  FINAL_URL=$URL
+elif [ "$EXTENSION" = "m3u8" ];
+then
+  NEW_URL="$(curl -sSL -o /dev/null "$URL" -w "%{url_effective}")"
 
-PLAYLIST="$(curl -sSL "$URL" | grep -v '#')"
+  PLAYLIST="$(curl -sSL "$URL" | grep -v '#')"
 
-# Try to download highest available quality
-if echo "$PLAYLIST" | grep -q 1080; then
-  DOWNLOAD_URL="$(echo "$PLAYLIST" | grep 1080)"
-elif echo "$PLAYLIST" | grep -q 720; then
-  DOWNLOAD_URL="$(echo "$PLAYLIST" | grep 720)"
-elif echo "$PLAYLIST" | grep -q 480; then
-  DOWNLOAD_URL="$(echo "$PLAYLIST" | grep 480)"
-elif echo "$PLAYLIST" | grep -q 360; then
-  DOWNLOAD_URL="$(echo "$PLAYLIST" | grep 360)"
-elif echo "$PLAYLIST" | grep -q 240; then
-  DOWNLOAD_URL="$(echo "$PLAYLIST" | grep 240)"
+  # Try to download highest available quality
+  if echo "$PLAYLIST" | grep -q 1080; then
+    DOWNLOAD_URL="$(echo "$PLAYLIST" | grep 1080)"
+  elif echo "$PLAYLIST" | grep -q 720; then
+    DOWNLOAD_URL="$(echo "$PLAYLIST" | grep 720)"
+  elif echo "$PLAYLIST" | grep -q 480; then
+    DOWNLOAD_URL="$(echo "$PLAYLIST" | grep 480)"
+  elif echo "$PLAYLIST" | grep -q 360; then
+    DOWNLOAD_URL="$(echo "$PLAYLIST" | grep 360)"
+  elif echo "$PLAYLIST" | grep -q 240; then
+    DOWNLOAD_URL="$(echo "$PLAYLIST" | grep 240)"
+  fi
+
+  FINAL_URL="$(dirname "$NEW_URL")/$DOWNLOAD_URL"
 fi
-
-FINAL_URL="$(dirname "$NEW_URL")/$DOWNLOAD_URL"
 
 ffmpeg -i "$FINAL_URL" -c copy "$FILENAME"
